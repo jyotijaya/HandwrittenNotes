@@ -1,0 +1,59 @@
+Streams:
+If you want to represent a group of object in single entiry then go for collection.
+
+If you want process objects from that same collection then go for Streams.
+
+Stream s=c.stream();
+
+We are just collecting object of c collection into s stream object using stream() method.
+
+sample program for filter():
+
+ArrayList<Integer> a=new ArrayList<Integer>();
+		a.add(2);
+		a.add(1);
+		a.add(9);
+		a.add(8);
+		a.add(3);
+		a.add(2);
+		a.add(4);
+		a.add(5);
+		a.add(7);
+		
+		List<Integer> l=
+		 a.stream()
+		.filter(i->i%2==0)
+		.collect(Collectors.toList());
+
+		
+		System.out.println(l);
+Output:
+[2, 8, 2, 4]
+
+sample program for map():
+
+ArrayList<Integer> a=new ArrayList<Integer>();
+		a.add(2);
+		a.add(1);
+		a.add(9);
+		a.add(8);
+		a.add(3);
+		a.add(2);
+		a.add(4);
+		a.add(5);
+		a.add(7);
+		
+		List<Integer> ls=a.stream().map(i->i+6).collect(Collectors.toList());		
+		System.out.println(ls);
+		
+Output:
+[8, 7, 15, 14, 9, 8, 10, 11, 13]
+
+
+
+For operation we can use several inbuilt function like filter(), map(), sorted()
+To collect the stream after operation several inbuilt methods like forEach(),collect(),match(), count()
+To collect element into list will use Collectors.toList() inside collect() as parameter. Return type of this List<Integer>
+
+Note:
+If our operation like addition, multiplication, double then will go for map() otherwise will use filter()

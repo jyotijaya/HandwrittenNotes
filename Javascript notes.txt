@@ -1,0 +1,43 @@
+module.exports
+===================
+If we want to use any function in another js file then will use module.exports
+
+(Ex-1):
+
+utility.js :
+
+		function add(a,b)
+		{
+		return a+b
+		}
+
+		module.exports=add;
+
+Demo.js :
+
+		var addfn=require("./utility.js)
+
+		console.log(addfn(5,6); //11
+
+(Ex-2):
+utility.js : 
+		function add(a,b)
+		{
+			return a+b;
+		}
+		function sub(a,b)
+		{
+			return a-b;
+		}
+		module.exports={
+			add: add,
+			sub: sub
+		}
+
+Demo.js: 
+
+		var addfn=require("./utility.js")
+
+		console.log(addfn.sub(5,6));
+		console.log(subfn.sub(5,6));
+

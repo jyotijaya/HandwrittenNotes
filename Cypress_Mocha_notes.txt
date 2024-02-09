@@ -1,0 +1,1203 @@
+1. In particular folder location-> open cmd-> type "npm init" to create a javascript project.
+2. Open folder in VS code or intellij.
+3. Goto terminal-> npm install cypress --save-dev (To install cypress)
+4. npx cypress open (To open cypress dashboard)
+Note: To execute all test scripts in headless mode use below command in terminal
+"npx cypress run"
+
+NB: Cypress comes with Mocha & Chai library .
+Mocha helps us to structured our tests.
+Chai helps us to assertion in our tests.
+
+5. Under describe block will write individual test cases using it block .
+   Will treat describe block as indivdual suite.
+    describe("Test suite-1", ()=>
+    {
+        it("TC_01", ()=>
+        {
+            cy.visit("https://www.google.com")
+        })
+
+        it("Tc_02", ()=>
+        {
+            cy.log("TC_02")
+        })
+    })
+
+6. Mocha hooks:
+----------------
+    a. only: only hooks we can write for describe & it block and it will execute only that describe/ it block
+    exclusively(Other suites/ test cases will be excluded)
+    Ex: syntax: 
+    describe.only("suite-1",function()
+    {
+        it.only("TC_01",function()
+        {
+            
+        })
+    })
+
+    b. skip: It will work just opposite of "only" hooks. if we mention block as skip then it will not execute/ skip
+    the describe/it block 
+    Ex: syntax: 
+    describe.skip("suite-1",function()
+    {
+        it.skip("TC_01",function()
+        {
+            
+        })
+    })
+
+    c. before: Before hooks will execute once before starting of first it block
+    syntax:
+    before(function()
+    {
+
+    })
+
+    beforeEach: Before Each hooks will execute before starting of each it block/test cases.
+    syntax:
+    beforeEach(function()
+    {
+
+    })
+
+    after: This will execute once after execution of all it block/testcases
+    afterEach: This will execute after each it block/test case execution.
+
+    Note: If will write before, beforeEach, after, afterEach hooks outside of describe block then
+    it will applicable for all the suites/ all the describe blocks.
+    If will write inside describe block then it will applicable only to that particular describe block.
+
+(Important Summary of Mocha hooks:)
+
+        Major mocha hooks/attributes are:
+            before, beforeEach, after, afterEach
+        Two mocha functions:
+            only() , skip()
+
+7. Cypress commands:
+--------------------
+visit():
+------------------
+ * cy.visit("https://www.google.com");// Navigate to url
+
+get():
+------------------
+
+ * cy.get() command is used to fetch webElement from web page or
+   we can say get () yield the dom element(Basically return the element)
+   Ex: cy.get('button').click();
+
+find():
+----------------
+cy.get(".sidebar").find(".menu-items", {timeout: 3000}).click() //It will for 3sec to find specific menu items.
+
+Note: what is difference between get() & find()
+
+Lets take baove example
+cy.get(".sidebar").get(".menu-items").click()
+
+Here after finding sidebar element again it will try to fetch all menu items globally (Menu items
+it will fetch in entire web page)
+
+cy.get(".sidebar").find(".menu-items").click()
+But in this case after fetching/yield the sidebar element find function will try to fetch all
+menu items present under sidebar node.
+
+find() is always used to find out element within a previously selected/identified element
+
+contains():
+------------------
+
+ * cy.contains('Terms & condition').click(); // Used to findout specific word on the UI & perform click operation
+ * cy.get('footer').contains('Terms & Condition').click();
+ * cy.contains("Select Option").should("have.text","select Option")
+ * cy.contains("ul", "apple")
+ * cy.get(".navbar-nav").contains("ul","Desktops", {matchCase: true})
+
+type():
+------------------
+ * cy.get(".username").type("Tom") //type() is used to enter value into textbox
+ * cy.type("Tom {shift,enter}") // In this way after typing Tom in textbox it will press shift & enter
+ * cy.type("Tom {shift}{enter}") // In this way after typing Tom in textbox it will press shift & enter
+
+clear():
+------------------
+* cy.get("[type="textbox"]").clear() // Used to clear if any values in textbox
+
+check():
+-------------------
+* cy.get("[type="radio"]").check().should("be.checked") // Used to check the checkbox or radio button
+* if we want to select first checkbox & validate the value of checkbox use below code:
+    cy.get("[type='radio']").first().check().should("be.checked").and("have.value", "apple")
+
+
+uncheck():
+------------------
+* cy.get("[type='radio']").uncheck().should(not.be.checked) //Uncheck the checkbox or radio button & add assertion using
+  "should"
+
+Q. how to handle dropdown?
+select():
+------------------
+This command is used to select option from dropdown
+cy.get("#select-demo").select(index)
+cy.get("#select-demo").select(value)
+cy.get("#select-demo").select(visibletext)
+
+cy.get("#select-demo").select("bengaluru").should("have.value","bengaluru")
+
+cy.get("#select-demo").select(["Donut", "Cake"]) // To select multiple option in multi select dropdown
+
+
+Q. How to validate all option present in dropdown as per my expected list?
+
+        const exp_option=["Bing","Google","Iphone","Yahoo"];
+        cy.visit("https://chercher.tech/practice/practice-dropdowns-selenium-webdriver");
+        cy.get('.col-lg-3').first().children('option').each(($el,index,$list)=>
+        {
+            expect($el).to.have.text(exp_option[index]);
+        })
+
+
+
+Q. How to handle dropdown if ul, li tag we have?
+
+cy.get("").type("cypress")
+cy.get(".cldert li span").contains("cypress automation").click()
+
+or
+
+cy.get(".fgsthy").find("li span").contains("cypress automation").click()
+
+Aliasing:
+-----------------
+Alias we can use for DOM element.
+
+cy.get('button').as(@button);
+cy.get("@button").should("be.enabled").click();
+
+We can alias response from server.
+
+        cy.request("").as("getComment")
+        cy.get("@getComment").should((response)=>
+        {
+            if(response.status==200)
+            {
+            expect(response).to.have.property('duration')
+            }
+        })
+
+wait():
+------------------
+ * cy.wait(2000) / Pause the script execution for 2 sec
+ * cy.wait(alias) . Ex: cy.wait("@button")
+ * cy.wait(aliases) . Ex: cy.wait(["@button","@checkbox"])
+
+viewport():
+------------------
+ * cy.viewPort(400,300) // To set the dimension of viewPort
+ * cy.viewPort("iphone-3") // Set the view port for iPhone-3
+ * cy.viewport("iphone-3", "landscape"); // Viewport for iPhone-3 in landscape mode.
+ * Viewport we can set in suite level also. It will applicable for all test cases.
+   describe("suite-1", {viewPortWidth: 300, viewPortHeight: 400}, function()
+   {
+
+   })
+  * We can set globally viewPort width & height in cypress.config.js file outside of e2e block
+    viewportHeight: 500,
+    viewportWidth: 600
+
+scrollTo():
+------------------
+cy.scrollTo(0,500); // It will scroll down the window 500px
+cy.get('.sidebar').scrollTo("bottom"); //Scroll the sidebar to its bottom
+cy.scrollTo("topRight")
+
+scrollIntoView()
+-------------------
+
+cy.get(".classNet").scrollIntoView()
+
+cy.url():
+------------------
+To fetch the current url.
+cy.url().then(url=>
+            {
+                console.log(url)
+            })
+
+cy.reload():
+-----------------
+To refresh a page
+
+eq:
+----
+eq is query after fetching webelement based on index.
+Ex: cy.get("tbody>tr").eq(0) // It will fetch first element as the index is 0
+
+8. Locators:
+--------------
+Locators part is pending
+
+9. Dropdown Handling:
+---------------------
+    Two type dropdown using select tag we have.
+    A==>> single select dropdown: 
+    ......................................
+        Belwo 3 ways to select option from dropdown
+    cy.get("#select-demo").select(Index)
+    cy.get("#select-demo").select(value)
+    cy.get("#select-demo").select(visibletext)
+
+        After selecting option we can chain further methods to validate expected option sleected or not
+    cy.get("#select-demo").select("Tuesday").invoke("val").should("eq","Tuesday")
+                                            (or)
+    cy.get("#select-demo").select("Tuesday").should("have.value","Tuesday")
+
+    B==>> Multiselect dropdown
+    .........................................
+    cy.get("#multiselect-demo").select(["California","Texas","Ohio"]).
+    invoke("val").should("deep.equal",["California","Texas","Ohio"])
+
+    Smart dropdown: Dropdown option will populate after typing the option in searchbox.
+    (Its like auto suggestion box)
+
+    cy.get("#searchbox").type("iPhone")
+    cy.get(".leftContianer").contains("iPhone15").click();
+
+
+16. Handle multiple window
+----------------------------
+    -->>Suppose we have one link then in that case if it will open in another tab/window 
+    then target attribute value must be "_blank" in html code.
+
+    -->> If we want to open the link in the same window then we have to change the attribute value to 
+    "_self" or remove it . 
+    --->> As Cypress does not support mechanism to handle multiple browser so either we have to remove or 
+    change to "_self".
+    ---->> To remove attribute below is the snippet
+    cy.contains("use role").invoke("removeAttr","target").click();
+    ---->> To change attribute value below is the snippet
+    cy.contains("use role").invoke("attr","target","_self").click();
+
+
+17.Read test data:
+
+--> First create test data in json format udner "fixtures" folder. (Ex: C:\Babul\Interview2023\CypressPractice_2024\cypress\fixtures\examples.json)
+{
+  "option": "Sunday",
+  "url" : "https://www.lambdatest.com/selenium-playground/select-dropdown-demo"
+}
+
+--> Sample code snippet method 1:
+									/// <reference types="cypress"/>
+
+									describe("validate application", ()=>
+									{
+										var base_url;
+										var dropdown_option;
+										
+										before("before block",function()
+										{
+											cy.fixture("example").then( (value)=>
+											{
+												base_url=value.url
+												dropdown_option=value.option
+											}
+											)
+											
+										})
+
+										it("validate title of google", ()=>
+										{
+											cy.visit(base_url)
+											cy.contains("Select Option").should("have.text","Select Option")
+											cy.get("#select-demo").select(dropdown_option).should("have.value",dropdown_option)
+											
+										})
+									})
+
+
+--> Sample code snippet method 2: 
+									/// <reference types="cypress"/>
+									import data from "../../fixtures/example.json"
+
+
+									describe("validate application", ()=>
+									{
+										// var base_url;
+										// var dropdown_option;
+										// before("before block",function()
+										// {
+										//     cy.fixture("example").then( (value)=>
+										//     {
+										//         base_url=value.url
+										//         dropdown_option=value.option
+										//     }
+										//     )
+											
+										// })
+
+										it("validate title of google", ()=>
+										{
+											cy.visit(data.url)
+											cy.contains("Select Option").should("have.text","Select Option")
+											cy.get("#select-demo").select(data.option).should("have.value",data.option)
+											
+										})
+									})
+
+--------------------------------------------------------------------------------------
+18. Should() :
+Should() we are using to validate or assertion
+
+should("have.value",30)
+should("have.text", "Ram")
+should("not.have.text","Tom")
+should("have.length",3)
+should("not.exist") // Validate an element no longer exist
+should("have.length.greaterThan",5)
+should("be.visible")
+should("not.be.visible")
+should("be.checked")
+should("be.enabled")
+should("not.be.enabled")
+should("eq","expected_text")  //Ex: cy.url().should("eq","https://www.google.com")
+
+-----------------------------------------------------------------------------------------
+19. Custom commands in cypress:
+We can add custom commands/reusable funtions in commands.js file present in support folder.
+So that we can call the function directly in our "it" block . Ex: cy.userInput("wipro")
+
+Code snippet:
+----------------
+(commands.js)
+
+Cypress.Commands.add("userInput", (text)=>{
+    cy.get(".bncx").type(text);
+    cy.contains("Google search").click();
+})
+
+(Test.cy.js)
+
+///<reference types="Cypress"/>
+
+describe("Suite-1", function()
+{
+    it("TC_01",function(){
+    cy.visit("https://www.google.com");
+    cy.userInput("wipro"); //Custom command call
+    })
+})
+----------------
+Cypress.Commands.add(functionName, callbackFn)
+Cypress.Commands.add(functionName, option, callbackFn)
+Cypress.Commands.addAll(callbackObj)
+Cypress.Commands.addAll(options, callbackObj)
+Cypress.Commands.overwrite(functionName, callbackFn)
+
+---------------------------------------------------------------------------------------------
+Use of "Script" key in package.json:
+
+If we want to execute any test case or any command then we can mention that in script key as a value in package.json
+file.
+Code:
+(package.json)
+
+"scripts": {
+    "test_headless": "npx cypress run" //This will execute all test  present in e2e folder in headless mode,
+    "test_single_script": "npx cypress run --spec cypress/e2e/tests/Test.cy.js"
+  }
+
+Now to execute goto terminal & type below command
+npm run test_headless
+
+---------------------------------------------------------------------------------------------
+Report:
+In terminal type below to install mochawesome reporter for cypress
+--> npm install cypress-mochawesome-reporter --save-dev
+
+Add few configuration in e2e.js & cypress.config.js
+(e2e.js) :
+
+import 'cypress-mochawesome-reporter/register';
+
+(cypress.config.js) :
+
+e2e: {
+    setupNodeEvents(on, config) {
+      require('cypress-mochawesome-reporter/plugin')(on);
+    }
+
+when will execute in terminal cypress-mochawesome-reporter will generate default html report.
+
+---------------------------------------------------------------------------------------------
+Page object model:
+----------------------
+sample code:
+---------------
+                                    (register.js)
+                             -------------------------------
+
+
+export class Register
+{
+    webLocators={
+        firstName:'#input-firstname',
+        lastName:'#input-lastname',
+        continueBtn:"input[type='submit']"
+    };
+    openURL()
+    {
+        cy.visit(Cypress.env('url'));
+    }
+
+    fillingRegisterForm(firstname_text, lastname_text)
+    {
+            cy.get(this.webLocators.firstName).type(firstname_text).should("have.value",firstname_text);
+            cy.get(this.webLocators.lastName).type(lastname_text);
+            cy.get(this.webLocators.continueBtn).click();
+    }
+}
+
+                                            (Test.cy.js)
+                                      -------------------------------
+///<reference types="Cypress"/>
+import { Register } from "../pages/register";
+const register=new Register();
+import data from "../../fixtures/example.json"
+
+
+
+describe("Suite-1",function()
+{
+    it("TC_01",function()
+    {
+        register.openURL();
+        register.fillingRegisterForm(data.firstname, data.lastname)
+    })
+})
+
+-->url we will add in cypress.config.js file under "env" key
+
+                                            (cypress.config.js)
+                                       ----------------------------
+
+const { defineConfig } = require("cypress");
+
+module.exports = defineConfig({
+  reporter: 'cypress-mochawesome-reporter',
+  e2e: {
+    setupNodeEvents(on, config) {
+      require('cypress-mochawesome-reporter/plugin')(on);
+    },
+    env:{
+      url:"https://naveenautomationlabs.com/opencart/index.php?route=account/register"
+    }
+  }
+});
+
+------------------------------------------------------------------------------------------
+GitHub Actions:
+Once will push code to remote repo then github action will execute all the test scripts in server.
+
+Steps:
+1. Create build.yaml under .github\workflows (Create these 2 directory manually)
+(build.yaml:)
+---------------
+                    name: Regression tests
+                    on: push
+                    jobs:
+                      cypress-run:
+                        runs-on: ubuntu-22.04
+                        steps:
+                          - name: Checkout
+                            uses: actions/checkout@v4
+                          # Install npm dependencies, cache them correctly
+                          # and run all Cypress tests
+                          - name: Cypress run
+                            uses: cypress-io/github-action@v6
+
+
+Now once we push the code in github code will execute.
+
+----> If we want to execute any specific test case then using "with" key we can mention that also.
+
+                    name: Regression tests
+                    on: push
+                    jobs:
+                      cypress-run:
+                        runs-on: ubuntu-22.04
+                        steps:
+                          - name: Checkout
+                            uses: actions/checkout@v4
+                          # Install npm dependencies, cache them correctly
+                          # and run all Cypress tests
+                          - name: Cypress run
+                            uses: cypress-io/github-action@v6
+                            with:
+                              commnd: npm run test_headless
+
+
+---------------------------------------------------------------------------------------------------------
+----> we can mention specific browser in yaml file . if not mention default is electron browser
+
+                    name: Regression tests
+                    on: push
+                    jobs:
+                      cypress-run:
+                        runs-on: ubuntu-22.04
+                        steps:
+                          - name: Checkout
+                            uses: actions/checkout@v4
+                          # Install npm dependencies, cache them correctly
+                          # and run all Cypress tests
+                          - name: Cypress run
+                            uses: cypress-io/github-action@v6
+                            with:
+                              browser: chrome
+---------------------------------------------------------------------------------------------------------
+--> We can add multiple jobs to achieve parallel execution
+
+name: Regression tests
+on: push
+jobs:
+  thread-1:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      # Install npm dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          commnd: npm run test_headless
+          browser: chrome
+
+  thread-2:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      # Install npm dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          commnd: npm run test_headless
+          browser: firefox
+
+---> To execute command in headed mode for "with" key just add below key-value pair.
+headed: true
+
+----------------------------------
+Connectors:
+--------------
+each() : To iterate element one by one we can use each().
+
+cy.get(".connectors>li").each(($el, index, $list)=>
+{
+cy.log($el, index, $list)
+})
+
+spread():
+
+
+
+Queries:
+--------------
+
+children()
+-----------------
+Yield the children under already identified element.
+
+Ex: cy.get(".navbar-nav").children().should("have.length",8)
+
+If we want to get specific children then sleector we can use in children()
+
+        Ex: <div>
+              <ul>
+                <li class="active">Unit Testing</li>
+                <li>Integration Testing</li>
+              </ul>
+            </div>
+sample code:
+            // yields [
+            //  <li class="active">Unit Testing</li>
+            // ]
+            cy.get('ul').children('.active')
+
+closest():
+-------------
+get the first DOM element that matches the selector
+
+Ex: cy.get("tbody").closest(".active-class")
+
+filter():
+---------------
+Fetch the DOM element that matches specific selector
+
+Ex: * cy.get("tbody").fetch(".users")  //yields all the element whose class name is ".users"
+    * cy.get(".navbar-nav").find(">li").filter(".dropdown").should("have.length",8)
+
+first():
+-------------
+Get the first DOM element from a set of elements.
+cy.get("li").first()
+
+last():
+----------
+Get the last DOM element from a set of elements.
+cy.get("li").last()
+
+invoke():
+-----------------------
+invoke a function on the previously yielded subject.
+
+cy.get('li').invoke('val').should('eq','example') //invoke val function of jquery
+cy.get('li').invoke('show') //invoke show function of jquery
+
+siblings(): To fetch all siblings of previously yield element.
+
+next(): To fetch immediate following sibling of previously yield element
+nextAll(): To fetch all immediate following siblings
+nextUntil(): Get all following siblings of each DOM element in a set of matched DOM elements up to,
+but not including, the element provided.
+
+prev(): To fetch immediate preceding sibling of previously yield element
+prevAll(): To fetch all preceding sibling of previously yield element
+prevUntil(): Get all following preceding of each DOM element in a set of matched DOM elements up to,
+but not including, the element provided.
+
+parent: get parent element of identified/ yield element
+parents : get all parents of identified/ yield element
+
+readFile():
+-------------
+Read a file yields its content
+
+cy.readFile("example.json").should('eq',"hello");
+
+Q. how to upload file in cypress?
+
+cy.selectFile("file.json")
+cy.selectFile(["file1.json", "file2.json"])
+cy.selectFile(["file1.json", "file2.json"], {force: true})
+
+Ex:
+cy.get("#fileUpload").selectFile("C:\\Babul\\Interview2024\\CypressFramework_2025\\cypress\\fixtures\\example.json")
+cy.get(".filename").should("have.text","example.json")
+
+(In many cases in modern applications, the underlying file input is hidden from view, and activated by a user clicking
+on a button. In these cases, you will need to tell Cypress to ignore its actionability checks and select the
+file even though a user would not be able to directly activate the file input.)
+
+
+Q. How to mousehover on an element?
+
+cy.get("button").trigger("mouseover")
+
+Q. How can we write xpath in cypress?
+Cypress doesn't support xpath. We need to use cypress-xpath plugin
+
+npm install cypress-xpath
+
+Q. How to validate page title in cypress?
+cy.title().should("eq","title of page")
+
+Q. How will you perform API testing in Cypress?
+
+    describe('API Testing in cypress', function () {
+
+        it('Hit Get Request validate its response status code and body', () => {
+            cy.request({
+                method: 'GET',
+                url: 'https://randomuser.me/api/',
+                qs: 'results=1'
+            }).then((response) => {
+                expect(response.status).to.eq(200)
+                expect(response.body).to.have.property('info')
+             })
+        })
+    })
+
+Q. How can we change base url in CLI or how can we change baseurl dynamically?
+npx cypress run --config baseUrl="https://www.google.com"
+
+Q. How to execute tests in order in Cypress?
+pending
+
+Q. Which plugin required to use BDD in cypress?
+cypress cucumber preprocessor
+
+
+npm install -save-dev cypress-cucumber-preprocessor
+
+open cypress.config.js
+
+const cucumber = require('cypress-cucumber-preprocessor').
+default const { defineConfig } = require("cypress");
+
+module.exports = defineConfig({ e2e: { setupNodeEvents(on, config) { on('file:preprocessor', cucumber()) }, specPattern: "cypress/e2e/*.feature", }, });
+
+open package.json past last "cypress-cucumber-preprocessor": { "nonGlobalStepDefinitions": true, "step_definitions": "cypress/e2e/" }
+
+
+Q. Which command is used in Cypress to manage the behavior of network requests?
+cy.navigate()
+
+Q. Explain cypress architecture
+
+Cypress runs in the background of browser & node.js runs in the background of cypress. Both these program
+regularly interact & perform actions that support each other.
+
+Q.  How to access shadow dom in cypress?
+
+Shadow DOM allows you to create an inner structure for an element that is not visible from the outside but can be
+accessed from within the element. Shadow DOM has been used for some time by browsers to encapsulate the inner
+structure of an element. The shadow() function handles shadow DOM:
+
+cy.get(" ").shadow().find("element").click()
+
+Q. How to mention browser name while executing scripts in Cypress command line interface or using cypress run command?
+npx cypress run --browser chrome --spec
+
+Q. How to execute all cy.js file under e2e folder.
+npx cypress run --spec "cypress\e2e\*.cy.js"
+
+Q. How to create config file & execute in CLI? (or) How to handle different environments in cypress?
+
+* Create individual config file for different environment like prod, test, uat
+
+touch prod.config.js
+touch test.config.js
+
+* Under each config file add sample piece of code to hit base url
+
+const { defineConfig } = require("cypress");
+
+module.exports = defineConfig({
+  e2e: {
+    baseurl: "prod.example.com"
+  }
+});
+
+* create one Test.cy.js inside e2e folder
+
+cy.visit("");
+
+* In terminal run below command
+
+npx cypress run --config-file prod.config.js
+
+npx cypress open --config-file prod.config.js   // This will open cypress test runner window
+
+Note on configuration:
+-----------------------
+1. defineConfig is helper function exported by Cypress
+
+const {defineConfig}=require('cypress')
+
+module.exports=defineConfig({
+
+    e2e:{
+    baseUrl: "https://www.google.com"
+    }
+
+}
+)
+
+2. we can change default behaviour of Cypress by adding configuration in cypress.config.js file
+Ex: env , watchFileChanges , port, reporter, retries
+
+defineConfig({
+
+env:{
+GoogleUrl: "https://www.google.com"
+AmazonURL: "https://www.amazon.com"
+},
+watchForFileChanges: true,
+screenshotOnRunFailure: true
+
+})
+
+3. How to take screenshot if test case got failed?
+we need to add below option in cypress.config.js file
+(screenshotOnRunFailure: true)
+
+Below are few option we can use in config file
+
+screenshotsFolder : path of folder //use option to store screenshot incase cy.screenShot()
+video: true //capture video of test
+videosFolder: path of folder // Folder location to store videos can change
+downloadsFolder: path
+
+Q. what is spec file?
+spec file is test file that holds the test code & we can create using it & describe function.
+
+4. e2e configuration
+--------------------------
+For end to end testing or component testing we can create e2e & component objects under defineConfig function
+
+module.exports=defineConfig({
+
+e2e:{
+}
+
+})
+
+NB: Under e2e we can write below options.
+
+baseUrl: "https://example.com"
+specPattern: "cypress/e2e/*.cy.{js,ts,jsx,tsx}"
+excludeSpecPattern: "cypress/e2e/*.cy.{js,ts,jsx,tsx}"
+supportFile: "cypress/support/e2e.{js,jsx,ts,tsx}" // Path of file to load before starting of test execution or before spec file load.
+setupNodeEvents:                               //Option to add node events
+
+Q. How to change option values from cypress.config.js file?
+
+Cypress.config("pageLoadTimeout", 10000)
+
+Common problem:
+
+baseUrl we should mention only under e2e . Not in env option
+
+
+Q. setupNodeEvents():
+-------------------------------
+
+
+
+
+
+
+****************************  Backend automation/ API automation  ****************************
+Q. How to perform get call in cypress
+it("get call",function()
+{
+    cy.request({
+                   url:"https://reqres.in/api/users",
+                   method: "GET",
+                   qs:{
+                    page: 2
+                   },
+                   headers:{
+                    "Content-Type":"application/json"
+                   }
+    })
+    .then((response)=>
+    {
+                    expect(response.status).to.be.eq(200);
+    })
+
+})
+
+
+alternate code snippet:
+------------------------------
+cy.request("GET","https://reqres.in/api/users").
+its("status").should("equal",200)
+
+Q. How to mock get call or how to listen to network call?
+
+cy.intercept() does not make a request, but rather "listens" to requests that occur on the network layer.
+cy.intercept is usually used in conjunction with two other commands, .as() and cy.wait().
+
+
+Code snippet:
+------------------
+                it("get original response",function()
+                    {
+                        cy.visit("https://dummyapi.io/explorer");
+                        cy.intercept(
+                            {
+                                method:"GET",
+                                path:"/data/v1/post/60d21af267d0d8992e610b8d/comment?limit=10",
+                            }
+                        ).as("getusers");
+                        cy.contains("Comments List").click();
+                        cy.wait("@getusers").then((intercept)=>
+                        {
+                            expect(intercept.response.body.total).equal(2)
+                        })
+                    })
+
+                    it.only("get mock response",function()
+                    {
+                        cy.visit("https://dummyapi.io/explorer");
+                        cy.intercept("GET","/data/v1/post/60d21af267d0d8992e610b8d/comment?limit=10",{fixture:"example.json"}).as("getlimit");
+                        cy.contains("Comments List").click();
+                        cy.wait("@getlimit").then((mock)=>
+                        {
+                            expect(mock.response.body.email).equal("abc@gmail.com");
+                        })
+                    })
+
+
+Q. How to perform action on a popup if its appearing on UI?
+
+it.only("TC_02",function()
+    {
+        cy.visit("https://www.easyjet.com/en/");
+        cy.get('body').then((body) => {
+            if (body.find('Accept all cookies')) {
+                 cy.get("button[id='ensCloseBanner']").click();
+            }
+       });
+    })
+
+
+Q. how to handle frame in cypress?
+
+Code snippet 1:
+---------------------
+    cy.visit("https://the-internet.herokuapp.com/tinymce");
+    cy.get("#mce_0_ifr").then(($iframe)=>{
+    let bodyframe=$iframe.contents().find('body');
+    cy.wrap(bodyframe).clear().type("Hello");
+    })
+
+Code snippet 2:
+-------------------
+        cy.visit('https://the-internet.herokuapp.com/iframe')
+            //get the frame locator and we are using the its command to get the property of the body of the frame
+            //and then we are using wrap function to chain the cypress commands.
+            // i am assigning the entire line in a variable
+       const iframescope=cy.get('#mce_0_ifr').its('0.contentDocument.body').then(cy.wrap)
+       //using the variable i am going to clear and type values inside the iframe
+       iframescope.clear();
+       iframescope.type("testing in iframe")
+
+
+Q. How to handle alert in Cypress?
+Three type of alert usually we have
+1.simple alert  2.Confirm alert  3. Prompt alert
+
+Simple alert:
+---------------
+        cy.visit("https://the-internet.herokuapp.com/javascript_alerts");
+        cy.contains("Click for JS Alert").click();
+        cy.on("window:alert",(simpleAlert)=>{
+            expect(simpleAlert).to.contains("I am a JS Alert");
+        })
+        cy.get("#result").should("have.text","You successfully clicked an alert");
+
+Confirm Alert (Click on Ok button):
+---------------------------------------
+        cy.visit("https://the-internet.herokuapp.com/javascript_alerts");
+        cy.contains("Click for JS Confirm").click();
+        cy.on("window:confirm",(confirmAlert)=>{
+            expect(confirmAlert).to.contains("I am a JS Confirm");
+        })
+Alternate code:
+
+        cy.visit("https://the-internet.herokuapp.com/javascript_alerts");
+        cy.on("window:confirm",(confirmAlert)=>
+        {
+        return true;
+        })
+        cy.contains("Click for JS Confirm").click();
+
+
+Confirm alert(Click on cancel button):
+-------------------------------------------
+        cy.visit("https://the-internet.herokuapp.com/javascript_alerts");
+        cy.on("window:confirm",(confirmAlert)=>
+        {
+        return false;
+        })
+        cy.contains("Click for JS Confirm").click();
+
+
+Prompt popup:
+------------------
+--> cy.window() method is used to handle prompt alert.
+--> cy.window will get the value of the object of the prompt.
+--> cy.stub() command is used to create a stub for a JavaScript function or object method. Stubs allow you to control the behavior of the function or method during your test
+
+            it.only('method three', () => {
+
+                   cy.visit("<url of the application>");
+                   cy.window().then(function(p){
+                       //stubbing prompt window p contains the object of the prompt window, using that we are typing in the prompt alert box
+                       cy.stub(p, "prompt").returns("testing");
+                       // click on the button which displays the prompt alert in the web page
+                       cy.get('locator').click()
+                       // assertion step
+                       cy.get('locator').contains('expected value')
+                    });
+
+               });
+
+
+Q. how to show hidden element in cypress?
+cy.get("").invoke("show");
+
+Q. How to validate text?
+
+            cy.get("").find("span").then((element)=>
+            {
+            const text=element.text()
+            expect(text).to.contains(expectedText)
+            })
+
+     Alternate:
+     ---------------
+        cy.get("").should("have.text",expectedText);
+
+Q. How to execute test cases multiple times?
+Below code will execute the TC_1 2 times.
+We can mention Cypress._.times(n,(K)=>{}) in both describe & it level.
+
+Code snippet:
+            Cypress._.times(2,(k)=>{
+                    it("TC_1",function()
+                    {
+                        cy.log("Hello")
+                    })
+            })
+
+Q. How to run multiple spec file in CLI?
+npx cypress run --browser chrome --spec "cypress/e2e/test2.cy.js,cypress/e2e/test3.cy.js"
+
+
+Q. How to use retries in cypress?
+
+describe("suite-1",{retries:2},function()
+{
+        it("TC_1",function()
+        {
+            cy.log("Hello")
+            expect(3).to.eq(4);
+        })
+})
+
+Q. How to configure retries for flaky test in config.js?
+
+retries:
+{
+runmode: 2,
+openmode: 3
+
+}
+
+
+
+Q. How to launch browser in CLI or in headed mode.
+npx cypress run --browser chrome --headed --spec
+
+Q. how to execute same TC with multiple set up test data?
+
+example.json:
+===============
+                [{
+                  "skill":"javascript"
+                },
+                {
+                  "skill":"API"
+                },
+                {
+                  "skill":"selenium"
+                }
+                ]
+
+
+DataDriver.cy.js
+==================
+
+            const jsondata=require('../fixtures/example.json')
+            ///<reference types="Cypress"/>
+
+
+            describe("suite-1",function()
+            {
+
+                    jsondata.forEach((data)=>
+                    {
+                        it("TC_1",function()
+                        {
+                            cy.visit("https://www.google.com/search?q=javascript+tutorial");
+                            cy.get("#APjFqb").clear().type(data.skill);
+                        })
+                    })            
+            })
+
+
+
+
+
+Q. How to group smoke & regression test in cyrpess?
+
+cypress-tags we can use
+
+npm install cypress-tags
+
+
+Q. Cypress is asyncronous.
+
+--> Asynchronus means all steps will execute at same time. Steps won't wait for previous step to complete the execution.
+
+
+-> Cypress is asynchronus in nature but from end user perspective
+Cypress team handle in such a way that use won't feel asynchronus nature
+-> .then() we should use as promise to avoid asynchronus but again it will be very noisy code
+So cypress team wrapped the promise & user only need to focus on steps.
+
+
+Ex:
+            it('hides the thing when it is clicked', () => {
+              cy.visit('/my/resource/path') // Nothing happens yet
+
+              cy.get(".hides-when-clicked") // Still nothing happening
+                .should("be.visible") // Still absolutely nothing
+                .click() // Nope, nothing
+
+              cy.get('.hides-when-clicked') // Still nothing happening
+                .should('not.be.visible') // Definitely nothing happening yet
+            })
+
+            // Ok, the test function has finished executing...
+            // We've queued all of these commands and now
+            // Cypress will begin running them in order!
+
+
+Q. How to write feature file & step definition for array of data?
+
+    Feature: Validate feature
+
+    Scenario: Validate array of data
+    Given I am login as user
+    When I am entering card with names
+    | Milk | Coco | Water | Drinks|
+    Then cards are displayed
+
+
+StepDefinition.cy.js:
+
+    When("I am entering card with names",(table: Datatable)=>
+    {
+        cy.get("[data-cy='new-card']").click();
+        table.raw()[0].forEach((item)=>{
+        cy.get('[data-cy="new-card-input"]').type("${item}{enter}");
+        })
+    })
+
+Q. How to group feature file?
+
+@smoke
+Feature: Validate feature
+
+    Scenario: Validate array of data
+    Given I am login as user
+    When I am entering card with names
+    | Milk | Coco | Water | Drinks|
+    Then cards are displayed
+
+
+
+npx cypress run --env tags="smoke" //This only pick only smoke test
+
+npx cypress run --env tags="smoke" //This only pick only smoke test

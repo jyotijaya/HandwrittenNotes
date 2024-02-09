@@ -1,0 +1,213 @@
+Class & Object:
+--------------------------
+                        class Demo:
+                            def __init__(self, name, age):
+                                self.name=name
+                                self.age=age
+
+                            def m1():
+                                print(self.name)
+
+                        d=Demo("Jyoti", 30)
+                        d.m1()
+                        d.name="Tom"
+                        d.m1()
+
+                        Output:
+                        Jyoti
+                        Tom
+Note:
+1. __init__ is constructor for Demo class & we can instantiate for instance variable
+2. def is a keyword we are using while creating function or constructor.
+3. self is used to refer current class instance . Instead of "self" word we can write any other word also but it should be the
+first parameter in method or constructor.
+4. To delete an object below is the single line of code snipet .
+del d
+--------------------------
+(pass keyword use:)
+--> After writing the class signature if we don't want to write any other piece of code or method or constructor
+then just write "pass"
+Code snippet:
+                        class Demo:
+                              pass
+----------------------------------------------------------------------------------------
+(Inheritence:) Aquiring properties(method, variable) of one class by another class is called as inheritence.
+
+class Parent:
+    def __init__(self):
+        pass
+    def m1(self):
+        print("m1 method of parent class")
+
+class Child(Parent):
+    def m3(self):
+        print("m3 method of child class")
+
+
+c = Child()
+c.m1()
+c.m2()
+c.m3()
+
+Output:
+m1 method of parent class
+m2 method of parent class
+m3 method of child class
+-----------------------------------------
+ __init__(self)
+ =======================
+Whenever will write __init__ constructor/function in child class then it will override the parent __init__ function .
+So if we want to call m1() method in below example it will throw error.
+If will not add __init__ in child class then m1() method will execute without any error.
+Ex:
+            class Parent:
+                def __init__(self, pname, page):
+                    self.pname=pname
+                    self.page=page
+
+                def m1(self):
+                    print(self.pname)
+                    print(self.page)
+
+            class Child(Parent):
+
+                def __init__(self, name, age):
+                    self.name=name
+                    self.age=age
+                def m3(self):
+                    print(self.name)
+                    print(self.age)
+
+
+            c = Child("jyoti",30)
+            c.m1() // It will give error. (AttributeError: 'Child' object has no attribute 'pname')
+            c.m3()
+Output:
+jyoti
+30
+-----------------------------------------
+To avoid the above issue we will call parent class __init__ function along with parameter so that we can call
+both m1() & m3() method without error.
+Ex:
+                class Parent:
+                    def __init__(self, pname, page):
+                        self.pname=pname
+                        self.page=page
+
+                    def m1(self):
+                        print(self.pname)
+                        print(self.page)
+
+                class Child(Parent):
+
+                    def __init__(self, name, age, pname, page):
+                        Parent.__init__(self, pname, page)
+                        self.name=name
+                        self.age=age
+                    def m3(self):
+                        print(self.name)
+                        print(self.age)
+
+
+                c = Child("jyoti",30, "Tom", 40)
+                c.m3()
+Output:
+Tom
+40
+jyoti
+30
+
+------------------------------------
+We can super() to call parent class properties also
+EX:
+
+                class Parent:
+                    def __init__(self, pname, page):
+                        self.pname=pname
+                        self.page=page
+
+                    def m1(self):
+                        print(self.pname)
+                        print(self.page)
+
+                class Child(Parent):
+
+                    def __init__(self, name, age, pname, page):
+                        super().__init__(pname, page) #[While using super() no need to write self keyword]
+                        self.name=name
+                        self.age=age
+                    def m3(self):
+                        print(self.name)
+                        print(self.age)
+
+
+                c = Child("jyoti",30, "Tom", 40)
+                c.m1()
+                c.m3()
+Output:
+Tom
+40
+jyoti
+30sss
+
+--------------------------------------------------------------------------------------
+Exception handling: Mechanism to handle the exception
+
+try : put the risky code in try block
+except : write the code in except block if any fail occur in try block
+else : else will execute if no failure in try block
+finally : Finally will execute at the end. Its like cleanup code or closing resources
+raise : To propagate any exception (Ex: raise Exception("Sorry no more entry")
+
+Sample code snippet:
+
+                try:
+                    print(10/0
+                except Arithmeticerror:
+                    print("arithmetic error")
+                except Exception:
+                    print("Exception occure")
+                else:
+                    print("Else block executed if no fail in try block")
+                finally:
+                    print("finally block executed")
+
+NB:
+==>>we can't write else block after finally block
+Sample code snippet:
+
+                try:
+                    print(10/0
+                except Exception:
+                    print("Exception occure")
+                finally:
+                    print("finally block executed")
+                else:                                                    #(syntax error)
+                    print("Else block executed if no fail in try block")
+
+==>> except block will execute based on sequence .
+
+----------------------------------------------------------------------------------
+Take input from console:
+
+            username=input("Enter username")
+            print("username is: "+username)
+
+----------------------------------------------------------------------------------
+Collection in Python:
+
+1. List (Mutable , Insertion order preserve, Indexing allowed, Duplication allowed)
+    Ex: li=['2',4,True]
+2. Set  (Mutable, Insertion order not preserve, Index not allowed, Duplication not allowed)
+    Ex: set={2,6,4,8,3,5,1}
+    set={2,6,4,8,3,5,True} // Allowed homogenous as well as heterogenous
+3. Tuple(Immutable, Insertion order preserve, Indexing allowed, Duplication allowed)
+    Ex: tup=(2,1,6,8,7,9,2,True)
+4. Dictionary (Immutable for keys, Insertion order preserve, Indexing allow, Duplicate key not allowed, Duplicate value allow)
+    Ex: dict={'name': 'Tom', 'age': 30, 'job': 'IT'}
+    {'name': 'Tom', 'age': 30, 'name': 'Jyoti'} // While printing it won't allow second "name" key
+
+
+
+
+

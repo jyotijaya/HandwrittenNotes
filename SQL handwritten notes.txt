@@ -1,0 +1,111 @@
+1. use database_name;
+Ex: use sakila;
+
+2. select : select data/table from a database
+3. * : select all column from a table
+4. where: filter query to match a condition
+5. As : Using for alias
+6. join : combine rows from multiple tables
+7. and: Combine query conditions & all condition met
+8. or : Combine query conditons & anyo of the condition should met
+9. limit: limit rows returned
+10. in: Specify multiple values when using where
+11. case: return value on a specified condition
+12. is null : return rows having null value
+13. like : return rows that match the pattern
+14. commit: write a transaction into table
+15. Rollback: revert a transaction block
+16. alter table: add/removs column from table
+17. update: update record in a table
+18. create: create a table
+19. Delete : delete rows from a table
+20. Insert: Insert rows into table
+21. Drop: delete table , databse, index
+22. group by: group data into logical sets
+23. order by: set result in order either desc or asc
+24. having: same as where but filters with group
+25. count: count number of rows
+26. sum : return sum of all records
+27. avg: return avg of all records
+28. min: return min of all records
+29. max: return max of all records
+
+Order of execution:
+
+select
+from 
+where
+group by
+having
+order by
+limit
+
+
+Data Definition language:
+
+--> 
+create database databse_name;
+
+-->
+create table Demo3(
+personId int,
+name varchar(30),
+DOJ date,
+status boolean,
+primary key(personId)
+);
+
+-->
+drop table Demo3; // To delete a table
+
+-->
+Insert into myTable(column1, column2)
+values(123, "tom");
+
+-->
+Delete from myTable 
+where column_1="Tom";
+
+-->
+
+
+Q. Difference between union & union all?
+
+Ans: Union or union all command used to combine result set of two or more select statement
+(Union operator won't allow duplicate entires where as union all allow duplicate. null entires allowed by union & unionall)
+every select statmetns with union must have same number of columns.
+The column must have similar data types
+
+Ex: 
+	select CITY from Customers
+	union
+	select city from Suppliers
+
+
+Q. Difference between unique, primary & foreign key
+
+Unique constraint & primary key allow only unique value in column where as in table we can have 
+multiple column having unique constraint but column having primary key constraint must be one
+
+foreign key will prevent the actions that destroy link between two table.
+
+foreign key in one table refer to primary key in another table.
+
+
+Q. How to findout second highest sal of employee?
+select sal(select sal from employee order by desc limit 2) from employee order by sal limit 1;
+
+(or)
+
+SELECT MAX(SALARY) FROM EMPLOYEE
+WHERE SALARY<(SELECT MAX(SALARY) FROM EMPLOYEE);
+
+Q. Joins
+
+
+
+
+
+
+
+

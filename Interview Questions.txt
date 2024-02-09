@@ -1,0 +1,433 @@
+Scenario Based Questions:
+============================
+Q. Let's say you are working on a platform written in REST and migrated now to GraphQL,
+ you just hit the main page and a few of the critical features are not loading or maybe appearing blank on the page,
+ whats all the steps you'll perform before reporting this to dev?
+
+Ans: 
+-> First step to clear all cache, form data, session, cookies & history because 
+some time API fail for status 200 because of stale state. 
+-> Goto console in dev tool to see if any error
+-> Goto network tab to see the respected API endpoints throwing any error
+-> May be because of incoreect json schema or configuration issue API data not reflecting 
+on UI or we are not getting proper response.
+-> There may be chance that Ui developer not handled properly the integration of API data to UI
+-> use postman or charles to manually check whether we are using correct endpoint, payload, authentication, headers & response.
+-> In some cases we can check system logs in grafana.
+
+
+
+
+Framework:
+===================
+Different frameworks for API testing, Web-Application testing and Mobile Application testing.
+
+Python Robot Framework - https://lnkd.in/dz-c3-nP
+
+Java Selenium Web Testing - https://lnkd.in/d4A_ajF6
+
+Java Selenium BDD Framework - https://lnkd.in/dXByvqAs
+
+Javascript Postman API Testing framework - https://lnkd.in/duKZEw57
+
+Python Rest API Testing framework - https://lnkd.in/dwQ7uvjw
+
+Java/Python/JavaScript Coding Practice Questions - https://lnkd.in/dYudxBQx
+
+Python Selenium Web App Testing Framework - https://lnkd.in/d5whmtGW
+
+Java Playwright Web App Testing Framework - https://lnkd.in/d2WNkwpF 
+
+
+
+
+Manual Testing:
+==================
+1. When a tester uses documentation, such as design documents and use cases, to check if the software works as it should, 
+what is this process called?
+
+2. What is the best testing method for a QA engineer to use when they have to test a new platform and there 
+is no documentation available?
+
+3. There is an enterprise system with three applications named App1, App2, and App3. App1 and App3 are still being worked on, 
+but App2 is about to be released. 
+What type of testing should be done to make sure that releasing App2 won't cause any problems for the entire system?
+
+Core Java:
+=================
+1. What is functional interface?
+ans: An interface where we have only one abstract method & can have multiple default methods. It is also called as single interface abstract methods or SAM.
+Consumer, Runnable, Comparable are some of examples of functional interface.
+
+2.  How hashmap works internally?
+    How hashtable works internally?
+    How Treemap works internally?
+
+3. How to make read only class
+Make the data member private & access it through getter method.
+
+4. How to create immutable class
+Make class as final
+Data memeber also final & private
+A parameterized constructor should initialize all the fields performing a deep copy so that data members can’t be modified with an object reference.
+Deep Copy of objects should be performed in the getter methods to return a copy rather than returning the actual object reference)
+Don't provide setter methods
+
+5. What is exception propagation?
+Its a process of throwing the exception from parent function to calling function & so on . In other words throwing from top to bottom of the stack. 
+At the bottom main method is the function
+
+Unchecked exception propagated using throw keyword.
+Checked exception throw compilation error & we must have to declare throws keyword in function signature.
+
+6. What is synchronization in java?
+
+7. Why pointer not use in Java?
+JVM implictly responsible to allocate memroy & deallocate. And direct acces to memory address for user also we can avoid
+
+8. JIT compiler: JIT compiler compile & converts byte code into machine code . 
+It is present in JVM.
+9. Factory design pattern
+10. Singleton design pattern
+Ans: Ensuring single instance of a class exists.
+TO achieve singleton behaviour follow below steps:
+* Declare all constructor of the class as private
+* Create instance through static method.
+
+Code snippet:
+====================
+class Demo
+{
+	private static Demo instance=null;
+	private Demo()
+	{
+		
+		
+	}
+	Demo(String s)
+	{
+		
+	}
+	
+	public static Demo getInstance()
+	{
+		if(instance==null)
+		{
+			instance=new Demo();
+		}
+		
+		return instance;
+	}
+	
+}
+public class Singleton2 {
+
+	public static void main(String[] args) 
+	{
+		Demo d1=Demo.getInstance();
+		Demo d2=Demo.getInstance();
+		System.out.println(d1); //DesignPattern.Demo@15db9742
+		System.out.println(d2); //DesignPattern.Demo@15db9742
+		
+	}
+
+}
+
+
+
+
+11. What is static imports in java and why do we need it?
+12. Can we synchronized an ArrayList? (Yes)
+
+Code snippet:
+==================
+			        List l=Collections.synchronizedList(new ArrayList());
+					l.add(20);
+					l.add("ss");
+					l.add(3);
+					
+					
+					synchronized (l) {
+						Iterator it=l.iterator();
+						while(it.hasNext())
+						{
+							System.out.println(it.next());
+						}
+					}
+Code snippet:
+---------------------
+					CopyOnWriteArrayList a=new CopyOnWriteArrayList();
+					a.add(20);
+					a.add("ss");
+					a.add(3);
+					
+					System.out.println(a);
+
+
+
+13. Explain life cycle of Maven.
+	8 stages of maven
+1. Validate 2.compile 3.test 4.package 5.integration test 6. verify 7.Install 8. Deploy
+
+*. Validate: Check the folder structure & validate all dependecies downloaded & store it in local repository(.m2 folder)
+*. compile: Check syntax of source code & convert .java into .class file & store it in classes/target folder.
+*. test: Run all unit test
+*. Package: package the compiled code into jar or war file
+*. integration test: run integration test for project
+*. verify: Verify project meet all required standards & valid.
+*. install: install the package code into local reports
+*. Deploy: Deploy package into remote server so that other dev can use
+
+Commands for maven:
+mvn clean: it will remove all dependecies from previous build
+mvn compile: compile the source code
+mvn test-compile: compile the test code only
+mvn install: Deploy the packaged jar/war to local reports
+
+=================================
+Core Java logical programming:
+=================================
+1. Program to remove duplicates from list.
+2. program to convert hashmap value to capitalize or Uppercase. 
+Solution:
+        HashMap<Integer, String> languages = new HashMap<>();
+        languages.put(1, "java");
+        languages.put(2, "javascript");
+        languages.put(3, "python");
+        // Change all value to uppercase
+        languages.replaceAll((key, value) -> value.toUpperCase());
+
+3. WAP to find missing number in a sequence
+4. WAP to find out duplicate occurence of character in a string.
+5. WAP to print duplicate elements in an array
+
+Using ArrayList:
+--------------------
+				ArrayList<Integer> a=new ArrayList<Integer>();
+				int[] arr= {1,2,3};
+				
+				boolean flag=false;
+				for(int i=0;i<arr.length;i++)
+				{
+					for(int j=i+1;j<arr.length;j++)
+					{
+						if(arr[i]==arr[j])
+						{
+							if(a.contains(arr[i]))
+							{
+								break;
+							}
+							else
+							{
+								a.add(arr[i]);
+								flag=true;
+							}
+						}
+					}
+				}
+				if (flag == true) { 
+					  
+					System.out.print(a + " "); 
+				} 
+				else { 
+					System.out.print( 
+						"No duplicates present in arrays"); 
+				}
+
+Using HashSet:
+-------------------
+
+				HashSet<Integer> a=new HashSet<Integer>();
+				int[] arr= {1,2,3,2,3,2,1,1,1,10,10,7,8};
+				
+				boolean flag=false;
+				for(int i=0;i<arr.length;i++)
+				{
+					for(int j=i+1;j<arr.length;j++)
+					{
+						if(arr[i]==arr[j])
+						{
+							a.add(arr[i]);
+							flag=true;
+						}
+					}
+				}
+				if (flag == true) { 
+					  
+					System.out.print(a + " "); 
+				} 
+				else { 
+					System.out.print( 
+						"No duplicates present in arrays"); 
+				}
+
+
+
+6. WAP to print given string is palindrome or not
+7. Write logic for converting string from aaaaabbcdddffaazzh -->5a2bc3d2f2a2zh
+8. Find out length of longest sequence in an interger array.
+
+				int[] arr= {1,2,3,5,6,7,9,10,20,21,23, 25,26,27,28};
+				//1,2,3
+				//5,6,7
+				//9,10
+				//20,21,23
+				//25,26,27,28
+				
+				HashSet<Integer> h=new HashSet<Integer>();
+				for(Integer i:arr)
+				{
+					h.add(i);
+				}
+
+				int greatestNum=0;
+				for(int i=0;i<arr.length;i++)
+				{
+					if(!h.contains(arr[i]-1))
+					{
+						int num=arr[i];//5
+						
+						while(h.contains(num))
+						{
+							num++;//8
+						}
+						
+						
+						
+						if(greatestNum<num-arr[i])
+						{
+							greatestNum=num-arr[i];
+						}
+						
+						
+						
+					}
+				}
+				System.out.println(greatestNum);
+
+
+9. Divide a string in N equal parts.
+Selenium:
+=================
+
+1. Write  Xpath for text " //span[text()='%Firdous%'] " which should support multiple environments where text can be with containing space or Capitals.
+2. Code is working in chrome or but throwing error in IE, how will you debug.
+3. Various Exceptions observed in framework.
+4. How to Handle no stale exception.
+5. identify  xpath from amazon website.
+6. How do you calculate ROI for Test Automation? 🔺 
+
+Ans: By calculating and demonstrating Test Automation’s Return on Investment (ROI), we can be better convinced that the investment will be worthwhile in the long run. Delivering more quantitative numbers on building and maintaining a test automation framework may be more helpful to get everyone on board for Automation.
+
+To calculate Automation ROI first you need to first calculate the Manual Execution time of your test case. This value can be updated in your Test Management Tool. 
+
+Time Saved by Automation  =Manual Execution Time -  Automation Execution Time
+
+Automation ROI = Time Saved by Automation / Investment. 
+Investment = time required to build frameworks + maintenance cost + (time to code one tests X number of tests)
+
+7. How to handle authnetication popup in selenium?
+Ans: We need to integrate username & password in url itself so that directly it will login without authentication popup
+
+syntax:
+	https://username:password@google.com
+
+8. How to read from Json to dataprovider in selenium?
+9. If tomorrow all test script got failed. What would be the reason
+May be some wrong code merged
+May be test data got changed
+May be some API change which is not reflecting on UI
+May be wrong use of locators. Lets say if any latest new which is dynamic & if we use text() to identify that element then script may fail
+Any new feature affect
+may be network issue, latency issue
+May be browser updated. We need to update driver.
+
+
+
+SQL:
+=================
+1. Write sql query for left outer join?
+	SELECT column_name(s)
+	FROM table1
+	LEFT JOIN table2
+	ON table1.column_name = table2.column_name;
+
+2. how to get second high salary.
+
+	SELECT MAX(SALARY) FROM EMPLOYEE
+	WHERE SALARY<(SELECT MAX(SALARY) FROM EMPLOYEE);
+
+(OR)
+
+	SELECT SALARY FROM(SELECT SALARY FROM EMPLOYEE ORDER BY SALARY DESC LIMIT 2) EMPLOYEE ORDER BY SALARY LIMIT 1;
+
+3. Difference between union & union all
+Ans: Union or union all command used to combine result set of two or more select statement
+(Union operator won't allow duplicate entires where as union all allow duplicate. null entires allowed by union & unionall)
+every select statmetns with union must have same number of columns.
+The column must have similar data types
+
+Ex: 
+	select CITY from Customers
+	union
+	select city from Suppliers
+
+
+
+Cypress:
+=================
+
+Rest API: 
+=============
+1. Various api response codes.
+2. What are the components required to build Api automation code from scratch.
+Ans:
+	Write down the objectives.
+	Understanding APIs and programming language.
+	Selecting the right testing tools.
+	IDE and version control system.
+	Configuration Files.
+	Test Script creation.
+	Test Data Management.
+	Continuous Integration.
+3. Difference between OAuth1 vs Oauth2?
+4. Different authentication in java?
+Ans: 
+Basic Authentication
+Digest Authentication
+Form Authentication
+OAuth1 & OAuth2
+
+5. What is difference between Put & Patch?
+6. Jsonschema how to validate?
+7. What is serialization & deserialization in Java?
+8. How to send a complex payload for a post API using POJO classes?
+9. How to verify cookie, header & content type in API response?
+10. Different status code.
+GitHub:
+=========
+1. Git conflict handling(while merging select code appropriate, reject unwanted code).
+2. Git rebase?
+3. Difference between git merge & git rebase
+4. Differencce between git fetch & git pull
+5. Git clone vs git fork.
+6. What inside .git folder?
+Ans: 
+.git folder initialize by "git init" command
+It store all branch information
+Store objects, hooks
+
+7.Can we run git command without a git
+
+Manual testing:
+===================
+Q. If there is Production defect, what action QA can take?
+How will you resolve Conflict with senior QA resource, what action to be taken for resolution?
+
+Q. Roles & respnsibilities of automation engineer?
+  Exploring and implementing new ways to automate systems.
+  Designing and testing automation equipment and processes.
+  Programming new automated components.
+  Identifying quality issues and writing reports.
+  Eliminating defects and errors with product and software development.
+

@@ -1,0 +1,236 @@
+1. pip install -U pytest
+2. We have to use "test" word as prefix (Ex: test_TC1)or suffix(Ex: TC1_test) so that pytest can identify the file
+EX: test_First , TC1_test, First_test
+3. In terminal pytest test_first.py
+So It will execute all method starting from "test" word as prefix in the specified python file. Suffix as "test" for method will not work.
+4. If will write pytest in terminal then it will execute all python file present in that folder.
+5. pytest -rA : It will show all the pass & fail test in terminal. A means all
+6. pytest -h : It will show all help related doc for pytest
+7. pytest -k 1 : It will execute all method which contain "1" in the method name.
+8. pytest test.second.py -k 1 : It will execute all method which contain "1" in the method name in specified python file.
+9. pytest -v : It will print in detail or short summary.
+pytest -v -s : It will print short summary along with it will show print statement in console.
+pytest -vs: It will print short summary along with it will show print statement in console.
+10. We can generate report using below flag (Note: We need to install pytest-html)
+pytest --html=report.html  : To generate rpeort in html format .
+pytest --junitxml="report.xml" : To gnerate report in xml format
+
+11. We can use marker to segregate test as per our need like few test for regression or few for smoke test.
+First write import pytest in specific python file
+Just above to test method write @pytest.mark.regression
+In terminal just type below code
+pytest -m regression
+
+So it will execute all test method mapped as regression marker.
+We can use multiple marker for a single test. Just two lines of code we have to write just above to test method
+@pytest.mark.regression
+@pytest.mark.smoke
+
+And in terminal
+pytest -m "regression or smoke" : Execute all test with regression & smoke marker
+pytest -m "regression and func" : Execute all test having both the marker mentioned.
+
+NOTE: Marker name we can customize. If we run in terminal then all test it will run as per our marker but it will give warning to register
+the marker.
+Q. How to register marker?
+--> Install .ini plugin in pycharm so that we can create file with .ini extension
+--> Now in working directory create pyetst.ini file
+--> At the top of file mention [pytest]
+--> Now mention our customized marker with description as below
+markers=
+    regression: To execute regression test
+    smoke: To execute smoke test
+    func: To execute fnctional test
+
+After this now execute in terminal using below command. It will not give warning.
+Command: pytest
+
+12. We can write code in pytest.ini to execute our files. It basically a configuration file for pytest.
+addopts= -m regression -rA -k 1 -v --html=report.html
+
+Sample code snippet of pytest.ini file:
+==================================================
+
+[pytest]
+
+addopts= -m regression -rA -v --html="abc.html"
+
+markers=
+    regression: To test regression test cases
+    smoke: To test smoke test cases
+    functional: To test functional test cases
+
+==================================================
+
+13. By default marker we have in pytest
+
+@pytest.mark.skip  : To skip a test script
+@pytest.mark.xfail : If test script is expected to fail because of known defects or change of functionality
+then use this marker so that entire report won't ugly because of failure.
+This failure will appear in "Expected failures" filter result.
+
+14. Marker we can use on class level (Means we can write the marker on the top of class declaration) so that it will applicable for
+all test method present in that class.
+Sample code snippet:
+-----------------------
+import pytest
+
+@pytest.mark.skip
+class Testclass:
+    def test_Tc7(self):
+        print("TC7 executed")
+
+    def test_Tc8(self):
+        print("TC8 executed")
+
+    def test_Tc9(self):
+        print("TC9 executed")
+-----------------------
+Note: While writing class name we can write "Test" word as prefix for class name (Ex: TestMaersk, Testclass).
+Suffix as "Test" word or only simple class name(Ex: Maersk) won't identify by pytest.
+(Reference for pytest markers: https://docs.pytest.org/en/7.4.x/example/markers.html#mark-examples)
+
+15. Fixture:
+----------------
+While testing or scripting we have below few steps.
+* Arrange
+* Act
+* Assertion
+* Cleanup
+
+So fixture will help us to write arrange steps(preconditions steps)
+Use pytest.fixture above to  setup function signature. In test method parameter use setup function name as per requirement
+Note: we can give any name to setup function name. There is no any restriction.
+Sample code snippet 1: (Here we use setup function for both test method so before starting of each test method
+setup function will execute)
+---------------------
+import pytest
+
+@pytest.fixture
+def setup():
+    print("setup executed")
+
+def test_TC1(setup):
+    print("TC1 executed")
+
+def test_TC2(setup):
+    print("TC2 executed")
+
+
+In terminal using CD command navigate to the file location.
+Then type pytest filename
+
+Output:
+                test_fixture1.py::test_TC1 setup executed
+                TC1 executed
+                PASSED
+                test_fixture1.py::test_TC2 setup executed
+                TC2 executed
+                PASSED
+
+
+---------------------
+Sample code snippet 2: (Here we use setup function for first test method so before starting of first test method only
+setup function will execute. setup function won't execute for second test method)
+---------------------
+import pytest
+
+@pytest.fixture
+def setup():
+    print("setup executed")
+
+def test_TC1(setup):
+    print("TC1 executed")
+
+def test_TC2():
+    print("TC2 executed")
+
+
+In terminal using CD command navigate to the file location.
+Then type pytest filename
+
+Output:
+                test_fixture1.py::test_TC1 setup executed
+                TC1 executed
+                PASSED
+                test_fixture1.py::test_TC2
+                TC2 executed
+                PASSED
+---------------------
+--> We can write down the cleanup code in setup function using the keyword "yield".
+The steps written after yield keyword will be considered as cleanup code & these steps
+will execute after execution of test method
+
+Sample code snippet 3:
+-----------------------------
+import pytest
+
+@pytest.fixture
+def precondition():
+    print("setup executed")
+    yield
+    print("Closing resource")
+
+def test_TC1(precondition):
+    print("TC1 executed")
+
+def test_TC2(precondition):
+    print("TC2 executed")
+
+Output:
+                    test_fixture1.py::test_TC1 setup executed
+                    TC1 executed
+                    PASSEDClosing resource
+
+                    test_fixture1.py::test_TC2 setup executed
+                    TC2 executed
+                    PASSEDClosing resource
+
+-----------------------------
+--> We can pass several parameter as fixture argument like scope, autouse.
+
+Ex:
+@pytest.fixture(scope="session"): setup function will execute before starting of session & if we
+add any yield then yield related steps will execute before ending of session
+
+@pytest.fixture(scope="function") : Execute before starting of each testcase method
+@pytest.fixture(scope="class") : Execute before starting of class
+@pytest.fixture(scope="package") : Start execution of setup function before starting of first test in package
+@pytest.fixture(scope="module")  : Start execution of setup function before starting of first test in module
+
+-----------------------------
+--> We can autouse as parameter in fixture so that no need to write the setup function name as argument in test method
+Ex: @pytest.fixture(autouse=True)
+
+we can pass False as per requirement in autouse so that setup function won't applicable for test methods.
+-----------------------------
+
+16. conftest.py
+=================
+This is a type of configuration file where we can write setup function just to avoid duplication in different classes
+, packages or modules
+
+Code snippet: (conftest.py)
+                    import pytest
+
+                    @pytest.fixture()
+                    def precondition():
+                        print("setup executed")
+                        yield
+                        print("Closing resource")
+Code snippet: (test_fixture.py)
+
+                    def test_TC1(precondition):
+                        print("TC1 executed")
+
+                    def test_TC2(precondition):
+                        print("TC2 executed")
+
+Output:
+                    test_fixture1.py::test_TC1 setup executed
+                    TC1 executed
+                    PASSEDClosing resource
+
+                    test_fixture1.py::test_TC2 setup executed
+                    TC2 executed
+                    PASSSEDClosing resource
